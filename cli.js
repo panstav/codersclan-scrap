@@ -3,6 +3,7 @@
 const got = require('got');
 const cheerio = require('cheerio');
 const chalk = require('chalk');
+const ora = require('ora');
 
 const gotOptions = {
 	headers: {
@@ -17,7 +18,10 @@ const argv = require('yargs')
 	.wrap()
 	.argv;
 
+const loader = ora({ spinner: 'dots7', text: 'Fetching open tasks' }).start();
+
 getOpenTasks()
+	.then(results => { loader.stop().clear(); return results; })
 	.then(printNicely)
 	.catch(err => {
 		console.error(err);
